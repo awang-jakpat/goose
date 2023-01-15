@@ -8,7 +8,9 @@ require (
 	github.com/denisenkom/go-mssqldb v0.12.3
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/jackc/pgx/v4 v4.17.2
+	github.com/joho/godotenv v1.4.0
 	github.com/ory/dockertest/v3 v3.9.1
+	github.com/pressly/goose/v3 v3.7.0
 	github.com/vertica/vertica-sql-go v1.2.2
 	github.com/ziutek/mymysql v1.5.4
 	modernc.org/sqlite v1.19.2
@@ -37,9 +39,7 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.12.0 // indirect
-	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
-	github.com/lib/pq v1.10.6 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/term v0.0.0-20220808134915-39b0c02b01ae // indirect

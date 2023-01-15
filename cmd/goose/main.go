@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"text/template"
 
+	"github.com/awang-jakpat/goose/v3"
 	"github.com/joho/godotenv"
-	"github.com/pressly/goose/v3"
 )
 
 var (
