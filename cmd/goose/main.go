@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"text/template"
 
+	"github.com/joho/godotenv"
 	"github.com/pressly/goose/v3"
 )
 
@@ -36,6 +37,7 @@ var (
 func main() {
 	flags.Usage = usage
 	flags.Parse(os.Args[1:])
+	godotenv.Load(".env")
 
 	if *version {
 		if buildInfo, ok := debug.ReadBuildInfo(); ok && buildInfo != nil && gooseVersion == "" {
