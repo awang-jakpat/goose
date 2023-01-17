@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -16,6 +17,7 @@ type tmplVars struct {
 
 var (
 	sequential = false
+	table      = ""
 )
 
 // SetSequential set whether to use sequential versioning instead of timestamp based versioning
@@ -47,13 +49,53 @@ func CreateWithTemplate(db *sql.DB, dir string, tmpl *template.Template, name, m
 		version = time.Now().Format(timestampFormat)
 	}
 
-	filename := fmt.Sprintf("%v_%v.%v", version, snakeCase(name), migrationType)
+	snakeCaseName := snakeCase(name)
+	filename := fmt.Sprintf("%v_%v.%v", version, snakeCaseName, migrationType)
 
 	if tmpl == nil {
 		if migrationType == "go" {
 			tmpl = goSQLMigrationTemplate
 		} else {
+			var commandType string
 			tmpl = sqlMigrationTemplate
+			splited := strings.Split(snakeCaseName, "_")
+			commandType = splited[0]
+			table = splited[1]
+			var sqlCreateMigrationTemplate = template.Must(
+				template.New("goose.sql-migration").Parse(
+					fmt.Sprintf(`-- +goose Up
+-- +goose StatementBegin
+CREATE TABLE %v (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+    created_at TIMESTAMP NULL ,
+    updated_at TIMESTAMP NULL , PRIMARY KEY (id)
+);
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+DROP TABLE %v;
+-- +goose StatementEnd
+`, table, table)))
+
+			var sqlUpdateMigrationTemplate = template.Must(
+				template.New("goose.sql-migration").Parse(
+					fmt.Sprintf(`-- +goose Up
+-- +goose StatementBegin
+ALTER TABLE %v;
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+ALTER TABLE %v;
+-- +goose StatementEnd
+`, table, table)))
+			switch commandType {
+			case "create":
+				tmpl = sqlCreateMigrationTemplate
+			case "update":
+				tmpl = sqlUpdateMigrationTemplate
+			}
 		}
 	}
 
