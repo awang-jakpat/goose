@@ -29,10 +29,15 @@ var (
 	sslkey       = flags.String("ssl-key", "", "file path to SSL key in pem format (only support on mysql)")
 	noVersioning = flags.Bool("no-versioning", false, "apply migration commands with no versioning, in file order, from directory pointed to")
 	noColor      = flags.Bool("no-color", false, "disable color output (NO_COLOR env variable supported)")
+	app          = flags.String("app", "", "app to migrate")
 )
 var (
 	gooseVersion = ""
 )
+
+var appMap = map[string]string{
+	"tongsang": "TONGSANG_",
+}
 
 func main() {
 	flags.Usage = usage
@@ -66,9 +71,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	appToMigrate := ""
+	if val, ok := appMap[*app]; ok {
+		appToMigrate = val
+	}
+
 	// The -dir option has not been set, check whether the env variable is set
 	// before defaulting to ".".
-	if *dir == defaultMigrationDir && os.Getenv(envGooseMigrationDir) != "" {
+	if *dir == defaultMigrationDir && os.Getenv(fmt.Sprintf("%s%s", appToMigrate, envGooseMigrationDir)) != "" {
 		*dir = os.Getenv(envGooseMigrationDir)
 	}
 
@@ -162,13 +172,17 @@ const (
 )
 
 func mergeArgs(args []string) []string {
+	appToMigrate := ""
+	if val, ok := appMap[*app]; ok {
+		appToMigrate = val
+	}
 	if len(args) < 1 {
 		return args
 	}
 	if d := os.Getenv(envGooseDriver); d != "" {
 		args = append([]string{d}, args...)
 	}
-	if d := os.Getenv(envGooseDBString); d != "" {
+	if d := fmt.Sprintf("%s%s", appToMigrate, os.Getenv(envGooseDBString)); d != "" {
 		args = append([]string{args[0], d}, args[1:]...)
 	}
 	return args
