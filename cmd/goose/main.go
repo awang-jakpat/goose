@@ -79,7 +79,8 @@ func main() {
 	// The -dir option has not been set, check whether the env variable is set
 	// before defaulting to ".".
 	if *dir == defaultMigrationDir && os.Getenv(fmt.Sprintf("%s%s", appToMigrate, envGooseMigrationDir)) != "" {
-		*dir = os.Getenv(envGooseMigrationDir)
+		fmt.Println(fmt.Sprintf("%s%s", appToMigrate, envGooseMigrationDir))
+		*dir = os.Getenv(fmt.Sprintf("%s%s", appToMigrate, envGooseMigrationDir))
 	}
 
 	switch args[0] {
