@@ -183,7 +183,6 @@ func mergeArgs(args []string) []string {
 		args = append([]string{d}, args...)
 	}
 	if d := os.Getenv(fmt.Sprintf("%s%s", appToMigrate, envGooseDBString)); d != "" {
-		fmt.Println(d, appToMigrate, *app)
 		args = append([]string{args[0], d}, args[1:]...)
 	}
 	return args
