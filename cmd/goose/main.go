@@ -182,7 +182,7 @@ func mergeArgs(args []string) []string {
 	if d := os.Getenv(envGooseDriver); d != "" {
 		args = append([]string{d}, args...)
 	}
-	if d := fmt.Sprintf("%s%s", appToMigrate, os.Getenv(envGooseDBString)); d != "" {
+	if d := os.Getenv(fmt.Sprintf("%s%s", appToMigrate, envGooseDBString)); d != "" {
 		fmt.Println(d, appToMigrate, *app)
 		args = append([]string{args[0], d}, args[1:]...)
 	}
